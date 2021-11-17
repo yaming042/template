@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import styles from './layout.scss'
 import Navbar from './../../components/Navbar'
 
@@ -37,4 +38,15 @@ class Layout extends React.Component{
     }
 }
 
-export default Layout
+function mapStateToProps(state){
+    return {
+        ...state
+    }
+}
+function mapDispatchToProps(dispatch){
+    return {
+        dispatch
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout)

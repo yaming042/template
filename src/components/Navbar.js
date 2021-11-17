@@ -19,10 +19,11 @@ export default class Navbar extends React.Component{
                 <div className={ styles['menu-list'] }>
                     {
                         menuConfig.map((item) => {
+                            const active = location.pathname === item.url
                             return (
                                 <div
                                     key={ item.url }
-                                    className={ styles['menu-item'] }
+                                    className={ `${styles['menu-item']} ${active ? styles['active'] : ''}` }
                                 >
                                     <div className={ styles['item']}>
                                         <Link to={ item.url }>{ item.name || '' }</Link>

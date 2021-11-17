@@ -7,6 +7,8 @@ class Comp extends React.Component{
         super(props)
     }
 
+    componentDidMount(){}
+
     render(){
         return (
             <div className={ styles['detial-container'] }>
