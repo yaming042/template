@@ -1,0 +1,1 @@
+export const testAction = (v) => ({type: 'TEST_ACTION', value: v})
