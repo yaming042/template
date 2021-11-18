@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './../../store'
+import history from './../../utils/history'
 
 import { ConfigProvider } from 'antd'
 // 由于 antd 组件的默认文案是英文，所以需要修改为中文
@@ -21,7 +22,7 @@ import Admin from './admin'
 ReactDOM.render(
     <Provider store={ store }>
         <ConfigProvider locale={ zhCN }>
-            <Router>
+            <Router history={ history }>
                 <Switch>
                     <Route exact path="/admin" component={ Admin } />
                     <Layout>
@@ -32,9 +33,9 @@ ReactDOM.render(
                                 const exist = menuConfig.find(d => d.url.indexOf(type) > 0)
                                 let comp = null
                                 if( exist ){
-                                    comp = <Detial />
+                                    comp = <Detial {...props} />
                                 }else{
-                                    comp = <NotFound />
+                                    comp = <NotFound {...props} />
                                 }
 
                                 return comp

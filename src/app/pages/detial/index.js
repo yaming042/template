@@ -7,7 +7,13 @@ class Comp extends React.Component{
         super(props)
     }
 
-    componentDidMount(){}
+    componentWillMount(){}
+    componentDidMount(){
+        const { history } = this.props
+        history.listen((location) => {
+            console.log( location )
+        })
+    }
 
     render(){
         return (

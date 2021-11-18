@@ -1,0 +1,22 @@
+.admin-container{
+    max-width: 800px;
+    margin: 20px auto 50px;
+
+    h2{
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .content{
+        position: relative;
+    }
+
+    .affix-button{
+        position: fixed;
+        right: 50px;
+        bottom: 50px;
+        width: 100px;
+        height: 100px;
+        font-size: 24px;
+    }
+}

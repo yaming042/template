@@ -1,8 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Button } from 'antd'
-import * as ACTION from './../../../utils/actions'
+import * as ACTION_TYPES from './../../../actions/constant'
 import styles from './index.scss'
 
 import Swiper from './../../../components/Swiper'
@@ -13,12 +12,14 @@ class Comp extends React.Component{
         super(props)
     }
 
-    componentDidMount(){}
-
-    click(){
-        const { clickFunc } = this.props
-        clickFunc && clickFunc()
+    componentDidMount(){
+        // 发送请求，请求资源
+        const { dispatch } = this.props
+        dispatch({
+            type: ACTION_TYPES.INIT_HOME
+        })
     }
+
 
     render(){
         return (
@@ -57,14 +58,7 @@ function mapStateToProps(state){
 }
 function mapDispatchToProps(dispatch){
     return {
-        clickFunc(){
-            dispatch({
-                type: ACTION.TEST,
-                payload: {
-                    items: [1]
-                }
-            })
-        },
+        dispatch,
     }
 }
 
