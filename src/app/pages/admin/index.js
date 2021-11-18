@@ -1,7 +1,9 @@
 import React from 'react'
-import { Form, Row, Col, Input, InputNumber, Select, Upload, Button, Affix } from 'antd'
-import { InboxOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux'
+import { Form, Row, Col, Input, InputNumber, Select, Button } from 'antd'
 import styles from './index.scss'
+import Upload from './upload'
+import { UPLOAD_NEW_PLUGIN } from './../../../actions/constant'
 
 import BraftEditor from './editor'
 
@@ -22,15 +24,25 @@ class Comp extends React.Component{
     }
 
     submit(values){
+        const { dispatch } = this.props
+
         let t = setTimeout(() => {
             clearTimeout(t)
 
             this.form.validateFields().then((values) => {
-                console.log( values )
+                dispatch({
+                    type: UPLOAD_NEW_PLUGIN,
+                    value: values
+                })
+                console.log( 'form values: ', values )
             }).catch((error) => {
                 console.log( error.message )
             })
         }, 0)
+    }
+
+    uplodaPicture(e){
+        
     }
 
     render(){
@@ -45,14 +57,15 @@ class Comp extends React.Component{
                         layout="vertical"
                         initialValues={{
                             name: '',
-                            show_picture: null,
+                            show_picture: [],
                             catalog: '',
                             icon: '',
                             source_url: '',
                             source_name: '',
-                            downloads: 0,
+                            downloads: 10,
                             introduce: ''
                         }}
+                        scrollToFirstError={ true }
                     >
                         <Row gutter={10}>
                             <Col span={24}>
@@ -77,20 +90,25 @@ class Comp extends React.Component{
                                     label={`简介图`}
                                     rules={[
                                         {
-                                            required: false,
-                                            message: '文件简介图不能为空'
+                                            required: true,
+                                            message: '文件简介图不能为空',
+                                            validator: (_, values, callback) => {
+                                                if( !values || !values.length ){
+                                                    return Promise.reject()
+                                                }else{
+                                                    return Promise.resolve()
+                                                }
+                                            }
                                         },
                                     ]}
-                                    valuePropName="fileList"
                                 >
-                                    <Upload.Dragger
-                                        name="files"
-                                        action="/upload.do"
-                                    >
-                                        <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                                        <p className="ant-upload-text">单击或将文件拖到此区域以上传</p>
-                                        <p className="ant-upload-hint">支持单个或批量上传</p>
-                                    </Upload.Dragger>
+                                    <Upload
+                                        multiple={ true }
+                                        limit={ 6 }
+                                        callback={(files) => {
+                                            this.form.setFieldsValue({'show_picture': files})
+                                        }}
+                                    />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -184,11 +202,11 @@ class Comp extends React.Component{
                                     label={`详细信息`}
                                     rules={[
                                         {
-                                            required: false,
+                                            required: true,
                                             message: '文件详细信息不能为空',
                                             validator: (_, value, callback) => {
                                                 if( !value || value == '<p></p>' ){
-                                                    return Promise.reject('请输入正文内容')
+                                                    return Promise.reject()
                                                 }else{
                                                     return Promise.resolve()
                                                 }
@@ -218,4 +236,9 @@ class Comp extends React.Component{
     }
 }
 
-export default Comp
+function mapDispatchToProps(dispatch){
+    return {
+        dispatch,
+    }
+}
+export default connect(mapDispatchToProps)(Comp)
