@@ -1,9 +1,9 @@
 import request from './../utils/request'
 
-export async function uploadToOss(url, data={}){
+export async function uploadToOss(url, opts={}){
     const options = {
-        method: 'POST',
-        data: data,
+        method: opts.method,
+        data: opts.data || {},
     }
     return request(url, options)
 }

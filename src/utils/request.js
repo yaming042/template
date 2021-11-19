@@ -12,6 +12,9 @@ export default function request( url, options={} ){
         timeout: options.timeout || 1000,
         responseType: options.responseType || `json`,
     }
+    if( options.headers ){
+        axiosOption['headers'] = options.headers
+    }
 
     return new Promise((resolve, reject) => {
         axios( axiosOption )

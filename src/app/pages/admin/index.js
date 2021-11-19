@@ -36,7 +36,7 @@ class Comp extends React.Component{
                 })
                 console.log( 'form values: ', values )
             }).catch((error) => {
-                console.log( error.message )
+                console.log( error, error.message )
             })
         }, 0)
     }
@@ -74,7 +74,7 @@ class Comp extends React.Component{
                                     label={`名称`}
                                     rules={[
                                         {
-                                            required: true,
+                                            required: false,
                                             message: '文件名称不能为空'
                                         }
                                     ]}
@@ -202,7 +202,7 @@ class Comp extends React.Component{
                                     label={`详细信息`}
                                     rules={[
                                         {
-                                            required: true,
+                                            required: false,
                                             message: '文件详细信息不能为空',
                                             validator: (_, value, callback) => {
                                                 if( !value || value == '<p></p>' ){

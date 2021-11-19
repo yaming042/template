@@ -1,0 +1,9 @@
+{
+    "accessKeyId": "LTAI5tRbiG9aSA9CTgLMT3St",
+    "accessKeySecret": "vRyuS8N7tFQre1YGyeOROHzzLHR2Xi",
+    "bucket": "yamingme",
+    "endpoint": "oss-cn-beijing-internal.aliyuncs.com",
+    "region": "oss-cn-beijing",
+    "internal": true,
+    "timeout": 60000
+}

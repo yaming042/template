@@ -7,8 +7,13 @@ import { UPLOAD_TO_OSS } from "./../utils/requestConfig"
 function* createNewPlugin(action){
     const { value } = action
     // 1. 先上传图片，如果图片上传失败，那么就停止数据入库
-    const response = yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', data: {files: value.show_picture}})
-    console.log('saga return: ', response)
+    let formData = new FormData()
+    formData.append('file', value.show_picture[0].originFileObj)
+    // 上传文件类型 content-type: multipart/form
+    yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', data: formData})
+    
+    // const response = yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', data: file})
+    // console.log('saga return: ', response)
     // 2. 图片上传成功后应该有返回图片地址，甚至图片ID
 }
 function* watch_new(){
