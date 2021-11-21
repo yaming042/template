@@ -5,6 +5,8 @@ logs
 .DS_Store
 npm-debug.log
 
+config
+
 # IntelliJ project files
 .idea
 *.iml
