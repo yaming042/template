@@ -56,8 +56,9 @@ class Comp extends React.Component{
                         { ...formItemLayout}
                         layout="vertical"
                         initialValues={{
-                            name: '',
+                            ext_file: [],
                             show_picture: [],
+                            name: '',
                             catalog: '',
                             icon: '',
                             source_url: '',
@@ -68,18 +69,55 @@ class Comp extends React.Component{
                         scrollToFirstError={ true }
                     >
                         <Row gutter={10}>
-                            <Col span={24}>
+                            <Col span={12}>
                                 <Form.Item
-                                    name={`name`}
-                                    label={`名称`}
+                                    name={`exe_file`}
+                                    label={`安装包`}
                                     rules={[
                                         {
                                             required: false,
-                                            message: '文件名称不能为空'
+                                            message: '请上传安装包',
+                                            validator: (_, values, callback) => {
+                                                if( _.required && (!values || !values.length) ){
+                                                    return Promise.reject()
+                                                }else{
+                                                    return Promise.resolve()
+                                                }
+                                            }
+                                        },
+                                    ]}
+                                >
+                                    <Upload
+                                        multiple={ false }
+                                        accept={`.crx`}
+                                        limit={ 1 }
+                                        placehoder={`上传安装包`}
+                                        callback={(files) => {
+                                            this.form.setFieldsValue({'exe_file': files})
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name={`icon`}
+                                    label={`图标`}
+                                    rules={[
+                                        {
+                                            required: false,
+                                            message: '文件图标不能为空'
                                         }
                                     ]}
                                 >
-                                    <Input placeholder={`请输入文件名称`} />
+                                    <Upload
+                                        multiple={ true }
+                                        accept={ `image/*` }
+                                        limit={ 6 }
+                                        placehoder={`上传图标`}
+                                        callback={(files) => {
+                                            this.form.setFieldsValue({'show_picture': files})
+                                        }}
+                                    />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -104,7 +142,9 @@ class Comp extends React.Component{
                                 >
                                     <Upload
                                         multiple={ true }
+                                        accept={ `image/*` }
                                         limit={ 6 }
+                                        placehoder={`上传图片`}
                                         callback={(files) => {
                                             this.form.setFieldsValue({'show_picture': files})
                                         }}
@@ -113,6 +153,20 @@ class Comp extends React.Component{
                             </Col>
                         </Row>
                         <Row gutter={10}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name={`name`}
+                                    label={`名称`}
+                                    rules={[
+                                        {
+                                            required: false,
+                                            message: '文件名称不能为空'
+                                        }
+                                    ]}
+                                >
+                                    <Input placeholder={`请输入文件名称`} />
+                                </Form.Item>
+                            </Col>
                             <Col span={12}>
                                 <Form.Item
                                     name={`catalog`}
@@ -131,20 +185,6 @@ class Comp extends React.Component{
                                         <Select.Option key={2} value={2}>测试-2</Select.Option>
                                         <Select.Option key={3} value={3}>测试-3</Select.Option>
                                     </Select>
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item
-                                    name={`icon`}
-                                    label={`图标`}
-                                    rules={[
-                                        {
-                                            required: false,
-                                            message: '文件图标不能为空'
-                                        }
-                                    ]}
-                                >
-                                    <Input placeholder={`请输入图标`} />
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -205,7 +245,7 @@ class Comp extends React.Component{
                                             required: false,
                                             message: '文件详细信息不能为空',
                                             validator: (_, value, callback) => {
-                                                if( !value || value == '<p></p>' ){
+                                                if( _.required && (!value || value == '<p></p>') ){
                                                     return Promise.reject()
                                                 }else{
                                                     return Promise.resolve()

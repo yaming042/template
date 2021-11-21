@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs')
-const multiparty = require('multiparty')
+const path = require('path')
 const file = require('formidable')
 
 const AliOss = require('./oss')
@@ -16,23 +15,40 @@ router.get('/test', function(req, res){
 })
 
 router.post('/2oss', async function(req, res){
-    const f = new file.IncomingForm()
-    f.parse(req, (err, fields, file) => {
-        console.log(111111111111, err)
-        console.log(222222222222, fields)
-        console.log(333333333333, file)
-
-    })
-
-    return res.send({status:200, data: [1,2,3], message: ''})
-    const {name, url, res: {status, headers: {'x-oss-request-id': uuid}}} = await AliOss.client.put('222.png', req.body.file)
-    const ossObj = {}
-    if( status === 200 ){
-        ossObj = {id: uuid, name: name, url: url}
+    function getSuffix(str=''){
+        return str.substring(str.lastIndexOf('.') + 1)
     }
-    console.log( 'oss return: ', ossObj )
-
-    res.send({status:200, data: [1,2,3], message: ''})
+    const formData = new file.IncomingForm()
+    formData.parse(req, async (err, fields, file) => {
+        if( !err ){
+            const { filepath, originalFilename, newFilename } = file.file || {}
+            if( filepath ){
+                const suffix = getSuffix(originalFilename || '')
+                let response = {}
+                try{
+                    response = await AliOss.client.put(`${newFilename}.${suffix}`, path.normalize(filepath), {})        // 得有第三个参数，不然会有点异常(只在后端)
+                }catch(e){
+                    response = e
+                }
+                
+                const {status: invalidStatus, code: invalidCode, requestId} = response 
+                if( invalidCode ){
+                    res.send({status: 510, data: {status: invalidStatus, code: invalidCode, requestId: requestId}, message: '上传至OSS失败'})
+                }else{
+                    const { name, url, res: {status} } = response
+                    if( status === 200 ){
+                        res.send({status: 200, data: {originName: originalFilename, newFilename: name, ossUrl: url}, message: 'OK'})
+                    }else{
+                        res.send({status:510, data: 'something error', message: 'error'})
+                    }
+                }
+            }else{
+                res.send({status:510, data: '未找到文件', message: '未找到文件'})
+            }
+        }else{
+            res.send({status:510, data: error, message: error})
+        }
+    })
 })
 
 module.exports = router;

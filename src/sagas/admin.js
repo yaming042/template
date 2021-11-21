@@ -10,7 +10,7 @@ function* createNewPlugin(action){
     let formData = new FormData()
     formData.append('file', value.show_picture[0].originFileObj)
     // 上传文件类型 content-type: multipart/form
-    yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', data: formData})
+    yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', file: formData})
     
     // const response = yield uploadToOss(UPLOAD_TO_OSS, {method: 'POST', data: file})
     // console.log('saga return: ', response)

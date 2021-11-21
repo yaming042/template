@@ -46,17 +46,18 @@ export default class Comp extends React.Component{
 
     render(){
         const { fileList } = this.state
-        const { limit, multiple } = this.props
+        const { limit, multiple, placehoder, accept } = this.props
         const uploadButton = (
             <div>
               <PlusOutlined />
-              <div style={{ marginTop: 8 }}>上传图片</div>
+              <div style={{ marginTop: 8 }}>{ placehoder }</div>
             </div>
         )
 
         return (
             <div className="upload-container">
                 <Upload
+                    accept={ accept || '*' }
                     multiple={ multiple || false }
                     listType="picture-card"
                     fileList={ fileList }
