@@ -9,7 +9,7 @@ export default function request( url, options={} ){
         baseURL: apiPrefix,             // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL
         method: options.method || `GET`,
         data: options.data || {},
-        timeout: options.timeout || 1000,
+        timeout: options.timeout || 5000,       // xhr请求超时时间，默认5秒
         responseType: options.responseType || `json`,
     }
     if( options.headers ){
@@ -21,7 +21,7 @@ export default function request( url, options={} ){
         .then((response) => {
             const { status } = response
             if( status === 200 ){
-                resolve( response )
+                resolve( response.data )
             }else{
                 reject( response )
             }
