@@ -4,10 +4,12 @@
     "private": true,
     "scripts": {
         "start": "node ./bin/www",
-        "build": "webpack --bail --color --progress --config webpack/webpack.config.js"
+        "build": "webpack --bail --color --progress --config webpack/webpack.config.js",
+        "commit": "git-cz"
     },
     "dependencies": {
         "ali-oss": "^6.16.0",
+        "antd": "^4.16.13",
         "axios": "^0.24.0",
         "cookie-parser": "~1.4.4",
         "debug": "~2.6.9",
@@ -22,10 +24,12 @@
         "@babel/plugin-transform-runtime": "^7.16.4",
         "@babel/preset-env": "^7.16.4",
         "@babel/preset-react": "^7.16.0",
-        "antd": "^4.16.13",
         "babel-loader": "^8.2.3",
         "braft-editor": "^2.3.9",
+        "commitizen": "^4.2.4",
         "css-loader": "^6.5.1",
+        "cz-conventional-changelog": "^3.3.0",
+        "cz-customizable": "^6.3.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-redux": "^7.2.6",
@@ -39,5 +43,10 @@
         "url-loader": "^4.1.1",
         "webpack": "^5.64.1",
         "webpack-cli": "^4.9.1"
+    },
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-customizable"
+        }
     }
 }
