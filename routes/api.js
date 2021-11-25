@@ -1,11 +1,16 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const fs = require('fs')
+const router = express.Router()
 const path = require('path')
 const file = require('formidable')
+const { v4: uuidv4 } = require('uuid')
 
 const config = require('./../config/config.json')
 const AliOss = require('./oss')
 const fileDir = (config || {}).filedir || ''
+
+const TestController = require('./../backend/controller/test')
+const ExtensionController = require('./../backend/controller/extension')
 
 // 获取文件名后缀
 function getSuffix(str=''){
@@ -25,13 +30,14 @@ router.post('/2oss', async function(req, res){
     formData.parse(req, async (err, fields, file) => {
         if( !err ){
             const { filepath, originalFilename, newFilename, mimetype } = file.file || {}
+            const { type } = fields
             if( filepath ){
                 const suffix = getSuffix(originalFilename || '')
-                const mime = mimetype.indexOf('image') > -1 ? 'image' : (mimetype.indexOf('application') > -1 ? 'exe' : 'unknow')
+                const mime = mimetype.indexOf('image') > -1 ? 'image' : (mimetype.indexOf('application') > -1 ? 'ext' : 'unknow')
 
                 let response = {}
                 try{
-                    response = await AliOss.client.put(`${fileDir[mime]}${newFilename}.${suffix}`, path.normalize(filepath), {})        // 得有第三个参数，不然会有点异常(只在后端)
+                    response = await AliOss.client.put(`tymcrx/${fileDir[mime]}${newFilename}.${suffix}`, path.normalize(filepath), {})        // 得有第三个参数，不然会有点异常(只在后端)
                 }catch(e){
                     response = e
                 }
@@ -42,11 +48,16 @@ router.post('/2oss', async function(req, res){
                 }else{
                     const { name, url, res: {status} } = response
                     if( status === 200 ){
-                        res.send({status: 200, data: {originName: originalFilename, newName: name, ossUrl: url}, message: 'OK'})
+                        res.send({status: 200, data: {type: type, originName: originalFilename, newName: name, ossUrl: url}, message: 'OK'})
                     }else{
                         res.send({status:510, data: 'OSS 上传失败', message: 'error'})
                     }
                 }
+
+                // 删除掉原文件
+                // fs.unlink(filepath, (err) => {
+                //     console.log(`移除文件失败： `, err)
+                // })
             }else{
                 res.send({status:510, data: '未找到文件', message: '未找到文件'})
             }
@@ -56,6 +67,23 @@ router.post('/2oss', async function(req, res){
 
         formData = null
     })
+})
+router.post('/create_extension', async function(req, res){
+    const postData = {
+        uuid: uuidv4(),
+        ...req.body
+    }
+
+    const {error, result, message} = await ExtensionController.createExtension( postData )
+    if( error ){
+        return res.send({status: 510, data: null, message: error})
+    }
+    return res.send({status: 200, data: result, message: 'success'})
+})
+
+router.get('/mysql', async function(req, res){
+    const result = await TestController.getAllData()
+    res.send({status: 200, data: result, message: 'success'})
 })
 
 module.exports = router;

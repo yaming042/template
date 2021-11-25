@@ -41,9 +41,7 @@ class Comp extends React.Component{
         }, 0)
     }
 
-    uplodaPicture(e){
-        
-    }
+    uplodaPicture(e){}
 
     render(){
 
@@ -57,10 +55,10 @@ class Comp extends React.Component{
                         layout="vertical"
                         initialValues={{
                             ext_file: [],
-                            show_picture: [],
+                            view_file: [],
                             name: '',
                             catalog: '',
-                            icon: '',
+                            icon_file: [],
                             source_url: '',
                             source_name: '',
                             downloads: 10,
@@ -71,7 +69,7 @@ class Comp extends React.Component{
                         <Row gutter={10}>
                             <Col span={12}>
                                 <Form.Item
-                                    name={`exe_file`}
+                                    name={`ext_file`}
                                     label={`安装包`}
                                     rules={[
                                         {
@@ -93,14 +91,14 @@ class Comp extends React.Component{
                                         limit={ 1 }
                                         placehoder={`上传安装包`}
                                         callback={(files) => {
-                                            this.form.setFieldsValue({'exe_file': files})
+                                            this.form.setFieldsValue({'ext_file': files})
                                         }}
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
-                                    name={`icon`}
+                                    name={`icon_file`}
                                     label={`图标`}
                                     rules={[
                                         {
@@ -112,10 +110,10 @@ class Comp extends React.Component{
                                     <Upload
                                         multiple={ true }
                                         accept={ `image/*` }
-                                        limit={ 6 }
+                                        limit={ 1 }
                                         placehoder={`上传图标`}
                                         callback={(files) => {
-                                            this.form.setFieldsValue({'show_picture': files})
+                                            this.form.setFieldsValue({'icon_file': files})
                                         }}
                                     />
                                 </Form.Item>
@@ -124,7 +122,7 @@ class Comp extends React.Component{
                         <Row gutter={10}>
                             <Col span={24}>
                                 <Form.Item
-                                    name={`show_picture`}
+                                    name={`view_file`}
                                     label={`简介图`}
                                     rules={[
                                         {
@@ -146,7 +144,7 @@ class Comp extends React.Component{
                                         limit={ 6 }
                                         placehoder={`上传图片`}
                                         callback={(files) => {
-                                            this.form.setFieldsValue({'show_picture': files})
+                                            this.form.setFieldsValue({'view_file': files})
                                         }}
                                     />
                                 </Form.Item>
