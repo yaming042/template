@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import { Form, Row, Col, Input, InputNumber, Select, Button } from 'antd'
 import styles from './index.scss'
 import Upload from './upload'
-import { UPLOAD_NEW_PLUGIN } from './../../../actions/constant'
+import { UPLOAD_NEW_PLUGIN, QUERY_PLUGIN_BY_ID } from './../../../actions/constant'
 
 import BraftEditor from './editor'
+import { getQueryString } from '../../../utils/functions'
 
 
 const formItemLayout = {
@@ -21,6 +22,19 @@ class Comp extends React.Component{
         super(props)
 
         this.state = {}
+    }
+
+    componentDidMount(){
+        const { dispatch } = this.props
+        const id = getQueryString('id')
+        if( id ){
+            dispatch({
+                type: QUERY_PLUGIN_BY_ID,
+                value: {
+                    id: id
+                }
+            })
+        }
     }
 
     submit(values){
@@ -40,8 +54,6 @@ class Comp extends React.Component{
             })
         }, 0)
     }
-
-    uplodaPicture(e){}
 
     render(){
 

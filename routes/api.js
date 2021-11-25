@@ -80,6 +80,15 @@ router.post('/create_extension', async function(req, res){
     }
     return res.send({status: 200, data: result, message: 'success'})
 })
+router.get('/get_extension', async (req, res) => {
+    const id = req.query.id
+
+    const {error, result, message} = await ExtensionController.getExtension(id)
+    if( error ){
+        return res.send({status: 510, data: null, message: error})
+    }
+    return res.send({status: 200, data: result, message: 'success'})
+})
 
 router.get('/mysql', async function(req, res){
     const result = await TestController.getAllData()

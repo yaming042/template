@@ -1,7 +1,9 @@
 import { all, call, takeLatest } from "redux-saga/effects"
-import { UPLOAD_NEW_PLUGIN } from "../actions/constant"
-import { uploadToOss, newPlugin } from "./../services/admin"
-import { UPLOAD_TO_OSS, CREATE_NEW_EXT } from "./../utils/requestConfig"
+import { UPLOAD_NEW_PLUGIN, QUERY_PLUGIN_BY_ID } from "../actions/constant"
+import { uploadToOss, newPlugin, getPlugin } from "./../services/admin"
+import { UPLOAD_TO_OSS, CREATE_NEW_EXT, GET_EXT_BY_ID } from "./../utils/requestConfig"
+
+import { message } from 'antd'
 
 // 上传文件
 function* createNewPlugin(action){
@@ -27,7 +29,7 @@ function* createNewPlugin(action){
     })
 
     const responsePromise = yield all( requestPromise )
-    console.log('responsePromise: ', responsePromise)
+    // console.log('responsePromise: ', responsePromise)
 
     if( responsePromise.find(d => d.status != 200) ){
         console.log(`上传存在失败`)
@@ -48,16 +50,30 @@ function* createNewPlugin(action){
     }
 
     // 2. 图片上传成功后应该有返回图片地址，甚至图片ID
-    const result = yield call(newPlugin, CREATE_NEW_EXT, {method: 'POST', data: postData})
-    console.log(111, result)
+    const { status, data, message: msg} = yield call(newPlugin, CREATE_NEW_EXT, {method: 'POST', data: postData})
+    if( status === 200 ){
+        message.success(`创建扩展成功`)
+    }else{
+        message.error( msg )
+    }
 
+}
+// 获取指定ID的数据
+function* getPluginById(action){
+    const { id } = action.value
+    const {status, data, message: msg} = yield call(getPlugin, `${GET_EXT_BY_ID}?id=${id}`)
+    console.log( status, data, msg)
 }
 function* watch_new(){
     yield takeLatest(UPLOAD_NEW_PLUGIN, createNewPlugin)
 }
+function* watch_edit(){
+    yield takeLatest(QUERY_PLUGIN_BY_ID, getPluginById)
+}
 
 export default function* (){
     yield all([
-        watch_new()
+        watch_new(),
+        watch_edit(),
     ])
 }

@@ -34,7 +34,18 @@ class ExtensionController{
             return {error: e.message, result: null, message: 'db extension error'}
         }
 
-        return {error: null, result: 'ok', message: 'ok'}
+        return {error: null, result: uuid, message: 'ok'}
+    }
+
+    // 获取数据
+    async getExtension(id){
+        const sql = "select * from `extensions` where uuid='"+id+"'"
+
+        const { error, results, fields } = await execute(sql)
+        if( error ){
+            return {error: error, result: null, message: 'db extension error'}
+        }
+        return {error: null, result: results, message: 'success'}
     }
 }
 

@@ -16,3 +16,6 @@ export async function newPlugin(url, opts={}){
     return request(url, options)
 }
 
+export async function getPlugin(url){
+    return request(url)
+}
