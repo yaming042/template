@@ -39,13 +39,23 @@ class ExtensionController{
 
     // 获取数据
     async getExtension(id){
-        const sql = "select * from `extensions` where uuid='"+id+"'"
+        const sql = "select `uuid`, `name`, `introduce`, `catalog`, `source_url`, `source_name`, `downloads`, `created_at`, `updated_at` from `extensions` where extensions.uuid='"+id+"'"
+        const fileSql = "select `type`, `url` from `files` where uuid='"+id+"'"
 
-        const { error, results, fields } = await execute(sql)
-        if( error ){
-            return {error: error, result: null, message: 'db extension error'}
+        let { error:err1, results:res1, fields:fields1 } = await execute(sql)
+        let { error:err2, results:res2, fields:fields2 } = await execute(fileSql)
+
+        if( err1 || err2 ){
+            return {error: err1 || err2, result: null, message: 'db extension error'}
         }
-        return {error: null, result: results, message: 'success'}
+        res1 = res1.map((item) => {
+            item.ext_file = res2.filter(d => d.type == 'ext')
+            item.view_file = res2.filter(d => d.type == 'view')
+            item.icon_file = res2.filter(d => d.type == 'icon')
+
+            return item
+        })
+        return {error: null, result: res1, message: 'success'}
     }
 }
 
